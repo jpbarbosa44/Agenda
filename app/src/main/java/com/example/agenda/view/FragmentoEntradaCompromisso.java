@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.agenda.R;
+import com.example.agenda.Repository.AppDbContext;
 import com.example.agenda.model.Compromisso;
 
 public class FragmentoEntradaCompromisso extends Fragment {
@@ -21,6 +22,7 @@ public class FragmentoEntradaCompromisso extends Fragment {
     private Button buttonData;
     private Button buttonHora;
     private EditText editTextDescricao;
+    private AppDbContext _context;
 
     @SuppressLint("SetTextI18n")
     @Nullable
@@ -32,6 +34,8 @@ public class FragmentoEntradaCompromisso extends Fragment {
         buttonHora = view.findViewById(R.id.button_hora);
         editTextDescricao = view.findViewById(R.id.edittext_descricao);
         Button buttonOk = view.findViewById(R.id.button_ok);
+
+        _context = new AppDbContext(getContext());
 
         buttonData.setOnClickListener(v -> {
             DataPickerDialog dialog = new DataPickerDialog((view1, year, month, dayOfMonth) -> {
@@ -48,19 +52,18 @@ public class FragmentoEntradaCompromisso extends Fragment {
         });
 
         buttonOk.setOnClickListener(v -> {
-            String nome = "";
             String descricao = editTextDescricao.getText().toString();
             String dataSelecionada = buttonData.getText().toString();
             String horaSelecionada = buttonHora.getText().toString();
 
             if (!descricao.isEmpty() && !dataSelecionada.equals("Data") && !horaSelecionada.equals("Hora")) {
-                Compromisso novoCompromisso = new Compromisso(nome, descricao, dataSelecionada, horaSelecionada);
+                Compromisso novoCompromisso = new Compromisso(descricao, dataSelecionada, horaSelecionada);
+                _context.AddNovoCompromisso(novoCompromisso);
                 editTextDescricao.setText("");
                 buttonData.setText("Data");
                 buttonHora.setText("Hora");
-                Log.d("FragmentoEntrada", "Descricao do Compromisso: " + descricao + "\nData do Compromisso: " + dataSelecionada + "\nHora do Compromisso: " + horaSelecionada);
             } else {
-                Toast.makeText(getContext(), "Por favor, preencha todos os campos!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Os campos devem ser preenchidos", Toast.LENGTH_SHORT).show();
             }
         });
 

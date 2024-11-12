@@ -12,7 +12,7 @@ import java.util.Calendar;
 
 public class OutraDataPickerDialog extends DialogFragment {
 
-    private DataPickerListener listener;
+    private final DataPickerListener listener;
 
     public OutraDataPickerDialog(DataPickerListener listener) {
         this.listener = listener;
@@ -26,12 +26,12 @@ public class OutraDataPickerDialog extends DialogFragment {
         int mes = calendar.get(Calendar.MONTH);
         int dia = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), (view, anoSelecionado, mesSelecionado, diaSelecionado) -> {
+        assert getActivity() != null;
+
+        return new DatePickerDialog(getActivity(), (view, anoSelecionado, mesSelecionado, diaSelecionado) -> {
             if (listener != null) {
                 listener.onDataSelecionada(anoSelecionado, mesSelecionado, diaSelecionado);
             }
         }, ano, mes, dia);
-
-        return datePickerDialog;
     }
 }
